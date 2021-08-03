@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BitcoinFromScratch", "BitcoinFromScratch\BitcoinFromScratch.fsproj", "{58A1F263-4F1B-4495-9A83-130043350CDA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58A1F263-4F1B-4495-9A83-130043350CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58A1F263-4F1B-4495-9A83-130043350CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58A1F263-4F1B-4495-9A83-130043350CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58A1F263-4F1B-4495-9A83-130043350CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30E0327F-B048-45C6-9EEE-4A30F9DE8C22}
+	EndGlobalSection
+EndGlobal
