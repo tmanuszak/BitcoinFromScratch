@@ -39,7 +39,10 @@ module Math =
             mutable_t <- t
         (mutable_old_r, mutable_old_s, mutable_old_t)
 
-    printfn $"hi {ExtendedEuclideanAlgorithm 35 51}"
+    // Returns modular multiplicate inverse m s.t. (n * m) % p == 1
+    let inv n p =
+        let (gcd, x, y) = ExtendedEuclideanAlgorithm n p
+        x % p
 
 module EllipticCurve = 
     // Elliptic curve over the finite filed of integers modulo a prime.
