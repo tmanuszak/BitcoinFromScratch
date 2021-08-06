@@ -1,5 +1,6 @@
 ﻿namespace BitcoinFromScratch
 
+
 module Math = 
     // Takes in an uppercase hex sting with 0x prefix and converts it to a bigint base 10
     let HexStringToInt (str: string) =
@@ -24,12 +25,12 @@ module Math =
     // Returns (gcd, x, y) s.t. a * x + b * y == gcd
     // This function implements the extended Euclidean algorithm.
     // (Figure out non mutaable version later)
-    let ExtendedEuclideanAlgorithm a b = 
-        let mutable (mutable_old_r, mutable_r, mutable_old_s, mutable_s, mutable_old_t, mutable_t) = (a, b, 1, 0, 0, 1)
-        let CalculateStep (old_r, r, old_s, s, old_t, t) = 
-            let quotient = int old_r / r
+    let ExtendedEuclideanAlgorithm (a : bigint) (b : bigint) = 
+        let mutable (mutable_old_r, mutable_r, mutable_old_s, mutable_s, mutable_old_t, mutable_t) = (a, b, bigint 1, bigint 0, bigint 0, bigint 1)
+        let CalculateStep ((old_r: bigint), (r: bigint), (old_s: bigint), (s: bigint), (old_t: bigint), (t: bigint)) = 
+            let quotient = (old_r / r)
             (r, old_r - quotient * r, s, old_s - quotient * s, t, old_t - quotient * t)
-        while mutable_r.Equals(0) = false do
+        while mutable_r <> bigint 0 do
             let (old_r, r, old_s, s, old_t, t) = CalculateStep (mutable_old_r, mutable_r, mutable_old_s, mutable_s, mutable_old_t, mutable_t)
             mutable_old_r <- old_r
             mutable_r <- r
@@ -43,6 +44,8 @@ module Math =
     let inv n p =
         let (gcd, x, y) = ExtendedEuclideanAlgorithm n p
         x % p
+
+    printfn $"{ExtendedEuclideanAlgorithm (bigint 34) (bigint 51)}"
 
 module EllipticCurve = 
     // Elliptic curve over the finite filed of integers modulo a prime.
@@ -61,6 +64,22 @@ module EllipticCurve =
         val isINF: bool
         new(c, x0, y0) = { curve = c; x = x0; y = y0; isINF = false }
         new(inf) = { curve = new Curve(bigint 0, bigint 0, bigint 0); x = bigint 0; y = bigint 0; isINF = inf}
+
+        static member (+) (self: Point, other: Point) = 
+            if self.isINF then other
+            elif other.isINF then self
+            elif self.x = other.x && self.y.Equals(other.y) = false then new Point(true)
+            elif self.x = other.x 
+                then
+                    let m = (bigint 3 * self.x**2 + self.curve.a) * (Math.inv (bigint 2 * self.y) self.curve.p)
+                    let rx = (m**2 - self.x - other.x) % self.curve.p
+                    let ry = (-(m * (rx - self.x) + self.y)) % self.curve.p
+                    new Point(self.curve, rx, ry)
+            else
+                let m = (self.y - other.y) * (Math.inv (self.x - other.x) self.curve.p)
+                let rx = (m**2 - self.x - other.x) % self.curve.p
+                let ry = (-(m * (rx - self.x) + self.y)) % self.curve.p
+                new Point(self.curve, rx, ry)
 
     // The generator over the Curve
     type Generator = 
