@@ -27,7 +27,7 @@ module Math =
     // (Figure out non mutaable version later)
     let ExtendedEuclideanAlgorithm (a : bigint) (b : bigint) = 
         let mutable (mutable_old_r, mutable_r, mutable_old_s, mutable_s, mutable_old_t, mutable_t) = (a, b, bigint 1, bigint 0, bigint 0, bigint 1)
-        let CalculateStep ((old_r: bigint), (r: bigint), (old_s: bigint), (s: bigint), (old_t: bigint), (t: bigint)) = 
+        let CalculateStep (old_r, r, old_s, s, old_t, t) = 
             let quotient = (old_r / r)
             (r, old_r - quotient * r, s, old_s - quotient * s, t, old_t - quotient * t)
         while mutable_r <> bigint 0 do
@@ -45,7 +45,7 @@ module Math =
         let (gcd, x, y) = ExtendedEuclideanAlgorithm n p
         x % p
 
-    printfn $"{ExtendedEuclideanAlgorithm (bigint 34) (bigint 51)}"
+    printfn $"{inv (bigint 10) (bigint 7)}"
 
 module EllipticCurve = 
     // Elliptic curve over the finite filed of integers modulo a prime.
