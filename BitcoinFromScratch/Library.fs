@@ -66,17 +66,17 @@ module EllipticCurve =
         static member (+) (self: Point, other: Point) = 
             if self.isINF then other
             elif other.isINF then self
-            elif self.x = other.x && self.y.Equals(other.y) = false then new Point(true)
+            elif self.x = other.x && self.y <> other.y then new Point(true)
             elif self.x = other.x 
                 then
                     let m = (bigint 3 * self.x**2 + self.curve.a) * (Math.inv (bigint 2 * self.y) self.curve.p)
                     let rx = (m**2 - self.x - other.x) % self.curve.p
-                    let ry = (-(m * (rx - self.x) + self.y)) % self.curve.p
+                    let ry = (bigint -1 * (m * (rx - self.x) + self.y)) % self.curve.p
                     new Point(self.curve, rx, ry)
             else
                 let m = (self.y - other.y) * (Math.inv (self.x - other.x) self.curve.p)
                 let rx = (m**2 - self.x - other.x) % self.curve.p
-                let ry = (-(m * (rx - self.x) + self.y)) % self.curve.p
+                let ry = (bigint -1 * (m * (rx - self.x) + self.y)) % self.curve.p
                 new Point(self.curve, rx, ry)
 
     // The generator over the Curve
@@ -97,14 +97,5 @@ module EllipticCurve =
         
     // Generator for the BitcoinCurve
     let BitcoinGenerator = new Generator(new Point(BitcoinCurve, Math.HexStringToInt "0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", Math.HexStringToInt "0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8"), Math.HexStringToInt "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141")
-    
-    let sk = 3
-    let pk = BitcoinGenerator.G + BitcoinGenerator.G
-    printfn $"Secret Key: {sk}\nPublic Key: {pk.x}, {pk.y}"
-    printfn $"Is on curve: {IsOnCurve pk}"
 
-module Main = 
-    printfn $"done"
 
-module test = 
-    printfn "done"
