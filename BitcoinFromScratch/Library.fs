@@ -45,8 +45,6 @@ module Math =
         let (gcd, x, y) = ExtendedEuclideanAlgorithm n p
         x % p
 
-    printfn $"{inv (bigint 10) (bigint 7)}"
-
 module EllipticCurve = 
     // Elliptic curve over the finite filed of integers modulo a prime.
     // Points on the curve satisfy y^2 = x^3 + a*x + b
@@ -100,6 +98,10 @@ module EllipticCurve =
     // Generator for the BitcoinCurve
     let BitcoinGenerator = new Generator(new Point(BitcoinCurve, Math.HexStringToInt "0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", Math.HexStringToInt "0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8"), Math.HexStringToInt "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141")
     
+    let sk = 3
+    let pk = BitcoinGenerator.G + BitcoinGenerator.G
+    printfn $"Secret Key: {sk}\nPublic Key: {pk.x}, {pk.y}"
+    printfn $"Is on curve: {IsOnCurve pk}"
 
 module Main = 
     printfn $"done"
