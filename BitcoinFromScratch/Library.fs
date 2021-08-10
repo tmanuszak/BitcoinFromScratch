@@ -43,7 +43,8 @@ module Math =
     // Returns modular multiplicate inverse m s.t. (n * m) % p == 1
     let inv n p =
         let (gcd, x, y) = ExtendedEuclideanAlgorithm n p
-        x % p
+        let rem = x % p // This is not doing mod for some reason
+        rem
 
 module EllipticCurve = 
     // Elliptic curve over the finite filed of integers modulo a prime.
