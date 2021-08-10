@@ -40,12 +40,17 @@ module Math =
             mutable_t <- t
         (mutable_old_r, mutable_old_s, mutable_old_t)
 
+    let modulus (dividend: bigint) (divisor: bigint) = 
+        if dividend >= bigint 0 then dividend % divisor 
+        else ((bigint -1) * (dividend * divisor) + dividend) % divisor
+
     // Returns modular multiplicate inverse m s.t. (n * m) % p == 1
     let inv n p =
         let (gcd, x, y) = ExtendedEuclideanAlgorithm n p
-        let rem = x % p // This is not doing mod for some reason
+        let rem = modulus x p // This is not doing mod for some reason
         rem
 
+    
 module EllipticCurve = 
     // Elliptic curve over the finite filed of integers modulo a prime.
     // Points on the curve satisfy y^2 = x^3 + a*x + b
@@ -71,13 +76,13 @@ module EllipticCurve =
             elif self.x = other.x 
                 then
                     let m = (bigint 3 * self.x**2 + self.curve.a) * (Math.inv (bigint 2 * self.y) self.curve.p)
-                    let rx = (m**2 - self.x - other.x) % self.curve.p
-                    let ry = (bigint -1 * (m * (rx - self.x) + self.y)) % self.curve.p
+                    let rx = Math.modulus (m**2 - self.x - other.x) self.curve.p
+                    let ry = Math.modulus (bigint -1 * (m * (rx - self.x) + self.y)) self.curve.p
                     new Point(self.curve, rx, ry)
             else
                 let m = (self.y - other.y) * (Math.inv (self.x - other.x) self.curve.p)
-                let rx = (m**2 - self.x - other.x) % self.curve.p
-                let ry = (bigint -1 * (m * (rx - self.x) + self.y)) % self.curve.p
+                let rx = Math.modulus (m**2 - self.x - other.x) self.curve.p
+                let ry = Math.modulus (bigint -1 * (m * (rx - self.x) + self.y)) self.curve.p
                 new Point(self.curve, rx, ry)
 
     // The generator over the Curve
@@ -91,7 +96,7 @@ module EllipticCurve =
 
     // True if point is on the curve
     let IsOnCurve (point: Point) = 
-        if point.isINF = false then ((point.y)**2 - (point.x)**3 - point.curve.a * point.x - point.curve.b) % point.curve.p = (bigint 0) else true
+        if point.isINF = false then Math.modulus ((point.y)**2 - (point.x)**3 - point.curve.a * point.x - point.curve.b) point.curve.p = (bigint 0) else true
 
     // y^2 = x^3 + 7
     let BitcoinCurve = new Curve(Math.HexStringToInt "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", Math.HexStringToInt "0x0000000000000000000000000000000000000000000000000000000000000000", Math.HexStringToInt "0x0000000000000000000000000000000000000000000000000000000000000007")
