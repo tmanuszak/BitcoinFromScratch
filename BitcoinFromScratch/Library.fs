@@ -39,6 +39,7 @@ module Math =
             mutable_t <- t
         (mutable_old_r, mutable_old_s, mutable_old_t)
 
+    // Modulus doesnt restrict negative remainders for some reason
     let modulus (dividend: bigint) (divisor: bigint) = 
         if dividend >= bigint 0 then dividend % divisor 
         else ((bigint -1) * (dividend * divisor) + dividend) % divisor
@@ -67,6 +68,7 @@ module EllipticCurve =
         new(c, x0, y0) = { curve = c; x = x0; y = y0; isINF = false }
         new(inf) = { curve = new Curve(bigint 0, bigint 0, bigint 0); x = bigint 0; y = bigint 0; isINF = inf}
 
+        // Point addition on an elliptic curve
         static member (+) (self: Point, other: Point) = 
             if self.isINF then other
             elif other.isINF then self
@@ -83,6 +85,20 @@ module EllipticCurve =
                 let ry = Math.modulus (bigint -1 * (m * (rx - self.x) + self.y)) self.curve.p
                 new Point(self.curve, rx, ry)
 
+        static member (*) (k: bigint, self: Point) = 
+            if k >= bigint 0 
+            then 
+                let mutable k1 = k
+                let mutable result = new Point(true)
+                let mutable append = self
+                while k1 > bigint 0 do
+                    if (Math.modulus k1 (bigint 2)) = bigint 1 then result <- result + append
+                    append <- append + append
+                    k1 <- k1 >>> 1
+                result
+            else raise (Error $"Illegal scalar multiplication {k} * {self}")
+
+        
     // The generator over the Curve
     type Generator = 
         val G: Point // The generator
