@@ -1,5 +1,6 @@
 ﻿namespace BitcoinFromScratch
 
+exception Error of string
 
 module Math = 
     // Takes in an uppercase hex sting with 0x prefix and converts it to a bigint base 10
@@ -10,15 +11,13 @@ module Math =
                     if str.[index] >= '0' && str.[index] <= '9' then b * (bigint 16), d + (bigint ((int str.[index]) - 48)) * b  // Character is 0-9
                     elif str.[index] >= 'A' && str.[index] <= 'F' then b * (bigint 16), d + (bigint ((int str.[index]) - 55)) * b  // Character is A-F
                     else  // There is a bug if you are in here
-                        printfn $"Here! {index} {length} {b} {d}"
-                        bigint -1, bigint -1
+                        raise (Error "Bug 1 in HexStringToInt")
                 else 
                     let (bresult, dresult) = Number str (index + 1) length (b, d)  // Not reached end of string. Keep recursing down then calculate on the way up.
                     if str.[index] >= '0' && str.[index] <= '9' then bresult * (bigint 16), dresult + (bigint ((int str.[index]) - 48)) * bresult  // Character is 0-9
                     elif str.[index] >= 'A' && str.[index] <= 'F' then bresult * (bigint 16), dresult + (bigint ((int str.[index]) - 55)) * bresult  // Character is A-F
                     else  // There is a bug if you are in here
-                        printfn $"Here!! {index} {length} {b} {d}"
-                        bigint -1, bigint -1
+                        raise (Error "Bug 2 in HexStringToInt")
             result
         snd <| Number str 2 str.Length (bigint 1, bigint 0)
 
