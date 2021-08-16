@@ -27,8 +27,9 @@ module Math =
     let ExtendedEuclideanAlgorithm (a : bigint) (b : bigint) = 
         let mutable (mutable_old_r, mutable_r, mutable_old_s, mutable_s, mutable_old_t, mutable_t) = (a, b, bigint 1, bigint 0, bigint 0, bigint 1)
         let CalculateStep (old_r, r, old_s, s, old_t, t) = 
-            let quotient = (old_r / r)
-            (r, old_r - quotient * r, s, old_s - quotient * s, t, old_t - quotient * t)
+            let fake_quotient = System.Numerics.BigInteger.DivRem(old_r, r) // F# allows negative remainders. It's messed up, man.
+            let real_quotient = if snd fake_quotient < 0I then ((fst fake_quotient) - 1I) else fst fake_quotient // Fix for negative remainders
+            (r, old_r - real_quotient * r, s, old_s - real_quotient * s, t, old_t - real_quotient * t)
         while mutable_r <> bigint 0 do
             let (old_r, r, old_s, s, old_t, t) = CalculateStep (mutable_old_r, mutable_r, mutable_old_s, mutable_s, mutable_old_t, mutable_t)
             mutable_old_r <- old_r
